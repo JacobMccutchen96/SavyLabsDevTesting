@@ -5,6 +5,10 @@ $Computerinfo = Get-ComputerInfo | Select-Object
 $DiskInfo = Get-Disk
 #$DiskInfo.count
 
+#GetFreeSystemSpace
+$FreeSpace = Get-PSDrive | where-object {$_.name -eq 'C'}
+
+
 
 #Making custom object to display all info at once, more neatly
 #Removing the dual select from $computerinfo and will specify in the custom object instead
@@ -14,6 +18,7 @@ $obj = [PSCustomObject]@{
     ComputerName = $ComputerInfo.CsDNSHostName
     ComputerOS = $ComputerInfo.OsVersion
     LogicalDiskCount =  $DiskInfo.count
+    FreeSpace_GB = [System.Math]::Round(($FreeSpace.Free /1Gb),2)
 }
 Write-Output $obj
 
