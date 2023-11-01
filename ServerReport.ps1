@@ -8,7 +8,18 @@ $DiskInfo = Get-Disk
 #GetFreeSystemSpace
 $FreeSpace = Get-PSDrive | where-object {$_.name -eq 'C'}
 
+#Get Number of CPU Cores
+$CPUCore = Get-CimInstance CIM_Processor
 
+#Get total Memory
+#Will find total amount of DIMMs and run foreach loop to corresponding number
+$RAM = Get-CimInstance CIM_PhysicalMemory
+$RAMSum = 0
+foreach ($item in $RAM) {
+    $RAMSum = $RAMSum + $item.capacity
+}
+
+Write-Output $RAMSum
 
 #Making custom object to display all info at once, more neatly
 #Removing the dual select from $computerinfo and will specify in the custom object instead
@@ -19,6 +30,8 @@ $obj = [PSCustomObject]@{
     ComputerOS = $ComputerInfo.OsVersion
     LogicalDiskCount =  $DiskInfo.count
     FreeSpace_GB = [System.Math]::Round(($FreeSpace.Free /1Gb),2)
+    CPU_Cores = $CPUCore.NumberOfCores
+    RAM_Total = [System.Math]::Round(($RAMSum /1Gb),2)
 }
 Write-Output $obj
 
