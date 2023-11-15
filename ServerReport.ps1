@@ -11,6 +11,9 @@ $FreeSpace = Get-PSDrive | where-object {$_.name -eq 'C'}
 #Get Number of CPU Cores
 $CPUCore = Get-CimInstance CIM_Processor
 
+#DHCP Server
+$DHCPHost = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true"
+
 #Get total Memory
 #Will find total amount of DIMMs and run foreach loop to corresponding number
 $RAM = Get-CimInstance CIM_PhysicalMemory
@@ -32,6 +35,7 @@ $obj = [PSCustomObject]@{
     FreeSpace_GB = [System.Math]::Round(($FreeSpace.Free /1Gb),2)
     CPU_Cores = $CPUCore.NumberOfCores
     RAM_Total = [System.Math]::Round(($RAMSum /1Gb),2)
+    DHCP_Host = $DHCPHost.DHCPServer
 }
 Write-Output $obj
 
