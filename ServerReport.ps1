@@ -12,7 +12,7 @@ $FreeSpace = Get-PSDrive | where-object {$_.name -eq 'C'}
 $CPUCore = Get-CimInstance CIM_Processor
 
 #DHCP Server
-$DHCPHost = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true"
+$DHCPHost = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Where-Object {$_.DHCPServer}
 
 #Get total Memory
 #Will find total amount of DIMMs and run foreach loop to corresponding number
