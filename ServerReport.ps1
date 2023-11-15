@@ -11,8 +11,6 @@ $FreeSpace = Get-PSDrive | where-object {$_.name -eq 'C'}
 #Get Number of CPU Cores
 $CPUCore = Get-CimInstance CIM_Processor
 
-#DHCP Server
-$DHCPHost = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Where-Object {$_.DHCPServer}
 
 #Get total Memory
 #Will find total amount of DIMMs and run foreach loop to corresponding number
@@ -22,7 +20,11 @@ foreach ($item in $RAM) {
     $RAMSum = $RAMSum + $item.capacity
 }
 
-Write-Output $RAMSum
+#Write-Output $RAMSum
+
+#DHCP Server
+$DHCPHost = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Where-Object {$_.DHCPServer}
+
 
 #Making custom object to display all info at once, more neatly
 #Removing the dual select from $computerinfo and will specify in the custom object instead
