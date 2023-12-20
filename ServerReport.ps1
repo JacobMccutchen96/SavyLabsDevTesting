@@ -1,4 +1,16 @@
 #Computer name and OS Version save and display to variable - Later moved to custom object.
+
+#Adding param entry for Disk
+
+param(
+    [Parameter(Mandatory)]
+    [string]$DriveLetter,
+    
+    [Parameter(Mandatory)]
+    [int]$DriveSpaceRounding
+
+)
+
 $Computerinfo = Get-ComputerInfo | Select-Object
 #$Computerinfo
 #Get Disk info. No specific info for number of drives, use global count method for listed items
@@ -6,7 +18,7 @@ $DiskInfo = Get-Disk
 #$DiskInfo.count
 
 #GetFreeSystemSpace
-$FreeSpace = Get-PSDrive | where-object {$_.name -eq 'C'}
+$FreeSpace = Get-PSDrive -Name $DriveLetter
 
 #Get Number of CPU Cores
 $CPUCore = Get-CimInstance CIM_Processor
@@ -34,7 +46,7 @@ $obj = [PSCustomObject]@{
     ComputerName = $ComputerInfo.CsDNSHostName
     ComputerOS = $ComputerInfo.OsVersion
     LogicalDiskCount =  $DiskInfo.count
-    FreeSpace_GB = [System.Math]::Round(($FreeSpace.Free /1Gb),2)
+    FreeSpace_GB = [System.Math]::Round(($FreeSpace.Free /1Gb),$DriveSpaceRounding)
     CPU_Cores = $CPUCore.NumberOfCores
     RAM_Total = [System.Math]::Round(($RAMSum /1Gb),2)
     DHCP_Host = $DHCPHost.DHCPServer
